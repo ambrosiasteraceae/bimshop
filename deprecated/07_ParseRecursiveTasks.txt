@@ -1,0 +1,24 @@
+timeline = doc.Timeliner
+
+
+#for t in timeline.TasksRoot.Children:
+	#print(t)
+	#for i in t.Children:
+		#print(i.DisplayName)
+
+def recursive_parse(path):
+	for t in path.Children:
+		if t.Children:
+			recursive_parse(t)
+		else:
+			print(t.DisplayName)
+
+#for task in timeline.TasksRoot.Children:
+	#for m in task.Children:
+		#if m.Children:
+			#recursive_parse(m)
+		#else:
+			#pass
+			#print(m.DisplayName)
+print("*"*25)
+recursive_parse(timeline.TasksRoot)

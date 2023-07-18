@@ -1,0 +1,13 @@
+# Get the active document
+doc = Application.ActiveDocument
+
+# Get the active view
+view = doc.ActiveView
+
+view.FocusOnCurrentSelection()
+
+vp = Viewpoint()
+vp.RenderStyle = ViewpointRenderStyle().Shaded
+print(vp.RenderStyle)
+
+view.CopyViewpointFrom(vp, ViewChange.Navigation)

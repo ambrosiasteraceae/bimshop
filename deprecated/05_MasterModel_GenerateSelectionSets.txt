@@ -1,0 +1,67 @@
+print('*'*25)
+layers = doc.Models[0].RootItem #Get all modelitems
+top3 = ModelItemCollection()
+all = list(layers.Children)
+global_scope = all[0:-1] #get up to but not included last index
+current_scope = all[-1] 
+
+container = {}
+
+for modelitem in current_scope.Children:
+	
+	if modelitem.DisplayName == 'C-TOPO':
+		for child in modelitem.Children:
+			container[child.DisplayName] = [child]
+	else:
+		container[modelitem.DisplayName] = [son for son in modelitem.Children]
+
+
+reordered = ['10.10 P3 - EXISTING SOUTH GROYNE - CUT',
+'10.20 P3 - BEACH RECLAMATION - CUT',
+'11.10 P3 - NORTH GROYNE QR', '11.20 P3 - NORTH GROYNE AR',
+'12.00 P3 - BEACH RECLAMATION - FILL',
+'13.00 P3 - BEACH QUALITY SAND',
+'00 PILES',
+'00 METAL FORMWORK',
+'00 BEAMS PC1',
+'00 BEAMS PC2',
+'00 IN SITU CONCRETE - PILES',
+'00 IN SITU CONCRETE - BEAMS',
+'00 SLABS - SL1',
+'00 SLABS - SL8B',
+'00 SLABS - SL5B',
+'00 SLABS - SL5A',
+'00 SLABS - SL8A',
+'00 SLABS - SL3',
+'00 SLABS - SL7B',
+'00 SLABS - SL4B',
+'00 SLABS - SL2',
+'00 SLABS - SL4A',
+'00 SLABS - SL6A',
+'00 SLABS - SL6B',
+'00 SLABS - SL7A',
+'00 IN SITU CONCRETE - SLAB']
+
+def save_references(_d):
+	import os
+	import json
+	with open (os.path.join(os.getcwd(), 'references.json'), 'w') as f:
+		json.dump(_d,f)
+references = {}
+for item in reordered:
+	for i,child in enumerate(container[item]):
+		col = ModelItemCollection()
+		col.Add(child)
+		newsel = SelectionSet(col)
+		if child.DisplayName:
+			print(child.DisplayName)
+			newsel.DisplayName = child.DisplayName
+			references[child.DisplayName] = child.InstanceGuid.ToString()
+		else:
+			newsel.DisplayName = item + str(i+1)
+			references[item + str(i+1)] = child.InstanceGuid.ToString()
+		#print(item, newsel.DisplayName)
+		
+		
+		doc.SelectionSets.InsertCopy(0, newsel)
+save_references(references)

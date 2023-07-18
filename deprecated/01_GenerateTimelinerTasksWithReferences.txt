@@ -1,0 +1,48 @@
+import os
+import json
+
+
+def load_references():
+	with open(os.path.join(os.getcwd(), 'references.json')) as f:
+		return json.load(f)
+
+references = load_references()
+
+
+
+from Autodesk.Navisworks.Api import ModelItem
+import clr
+clr.AddReference("Autodesk.Navisworks.Timeliner")
+from Autodesk.Navisworks.Api.Timeliner import TimelinerTask, TimelinerSelection
+from datetime import datetime, timedelta
+
+sets = doc.SelectionSets.Value
+timeline = doc.Timeliner
+
+def date_range(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)
+
+def get_dates(nodays):
+    start_date = datetime.now()
+    end_date = start_date + timedelta(days=nodays)
+    my_dates = []
+    for single_date in date_range(start_date, end_date):
+        my_dates.append((single_date, single_date + timedelta(days=1)))
+    return my_dates
+
+my_dates = get_dates(len(sets))[::-1]
+for i, s in enumerate(sets):
+    task = TimelinerTask()
+    task.DisplayName = s.DisplayName
+    task.DisplayId = references[s.DisplayName]
+    task.SimulationTaskTypeName = 'Construct' 
+    task.PlannedStartDate = my_dates[i][0]
+    task.PlannedEndDate = my_dates[i][1]
+    task.User1 = 'hidden'
+    timeline.TaskInsertCopy(0, task)
+    
+   
+   
+ 
+ 

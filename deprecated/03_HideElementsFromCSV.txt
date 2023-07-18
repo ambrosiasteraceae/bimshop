@@ -1,0 +1,58 @@
+import os
+import json
+#reset hidden
+def unhide():
+	elem = doc.Models[0].RootItem
+	collector = ModelItemCollection()
+	for parent in elem.Children:
+		for child in parent.Children:
+			collector.Add(child)
+	doc.Models.SetHidden(collector,False)
+
+unhide()
+
+def load_references():
+	with open(os.path.join(os.getcwd(), 'references.json')) as f:
+		return json.load(f)
+
+references = load_references()
+
+
+
+from Autodesk.Navisworks.Api import ModelItem
+import clr
+clr.AddReference("Autodesk.Navisworks.Timeliner")
+from Autodesk.Navisworks.Api.Timeliner import TimelinerTask, TimelinerSelection
+from datetime import datetime, timedelta
+
+
+map_modelitems = {}
+mitems = doc.Models[0].RootItem.Children
+for modelItem in mitems:
+	for child in modelItem.Children:
+		map_modelitems[child.InstanceGuid.ToString()] = child
+#for k,v in map_modelitems.items()[:10]:
+#	print(k,v.Parent.DisplayName)
+
+
+#print(t.DisplayId)
+#print(map_modelitems[t.DisplayId].InstanceGuid)
+	
+hidden = ModelItemCollection()
+
+timeline = doc.Timeliner
+tasks = timeline.Tasks
+task_enum = tasks.GetEnumerator()
+for child in task_enum:
+	for t in child.Children:
+		if t.User1 == 'shown':
+			print(t.DisplayName, t.User1)
+		else:
+			hidden.Add(map_modelitems[t.DisplayId])
+			#print(t.DisplayName, t.DisplayId, t.IsEnabled)
+	#search a modelitem with given t.DisplayId)
+
+doc.Models.SetHidden(hidden,True)
+
+
+#print(t.DisplayName, t.DisplayId)
