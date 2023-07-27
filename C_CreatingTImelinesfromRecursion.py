@@ -88,12 +88,19 @@ def create_task(s):
 	task = TimelinerTask()
 	task.DisplayName = s.DisplayName
 	print(s.DisplayName)
-	task.DisplayId = references[s.DisplayName] #instance guid
+	task.User2 = references[s.DisplayName] #instance guid
 	task.SimulationTaskTypeName = 'Construct' 
 	task.User1 = 'hidden'
 	return task
 
-sets = doc.SelectionSets.Value
+
+def sort_sets():
+    import re
+    sets = doc.SelectionSets.Value
+    newsets = sorted(list(sets), key = lambda s: [int(t) if t.isdigit() else t.lower() for t in re.split('(\d+)', s.DisplayName)])
+    return newsets
+
+sets = sort_sets()
 
 
 

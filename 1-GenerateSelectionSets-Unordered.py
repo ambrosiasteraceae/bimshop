@@ -15,6 +15,8 @@ root = doc.Models[0].RootItem
 
 container = {}
 for c in root.Children:
+	#Create a dictionary with
+	# {key: value} = {Root.DisplayName: [ModelItems of Root Children]}
 	container[c.DisplayName] = [modelItem for modelItem in c.Children]
 
 

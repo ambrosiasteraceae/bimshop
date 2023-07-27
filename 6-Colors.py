@@ -67,4 +67,4 @@ doc.Models.SetHidden(hidden,True)
 
 doc.Models.OverridePermanentColor(seen, Color(0.2549, 0.4118, 0.8824))
 doc.Models.OverridePermanentColor(hidden, Color(0.8275, 0.8275, 0.8275))
-doc.Modfels.OverridePermanentTransparency(hidden, 0.5)
+doc.Models.OverridePermanentTransparency(hidden, 0.5)

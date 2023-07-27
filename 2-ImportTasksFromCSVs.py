@@ -47,6 +47,7 @@ for i,row in enumerate(tasks):
 	task.DisplayName = row['ActivityId']
 	task.PlannedStartDate = row['Start']
 	task.PlannedEndDate = row['Finish']
+	curr = indent
 	
 	if indent == 0:
 		timeline.TaskInsertCopy(idx, task)
@@ -60,7 +61,7 @@ for i,row in enumerate(tasks):
 		parent = timeline.TasksRoot.Children[0].Children[idx]
 		idx+=1
 		
-		
+	#EEEEEEEEEEEEE
 	if indent == 2:
 		timeline.TaskAddCopy(parent, task)
 		child = parent.Children[0]
@@ -74,34 +75,19 @@ for i,row in enumerate(tasks):
 	if indent==4:
 		timeline.TaskAddCopy(child_son, task)
 		
-		
-		
-	#if indent==4:
-		#child_son = child.Children[0]
-		#timeline.TaskAddCopy(child_son, task)
-
-		
-	
-	#first we check indent
-	# if indent == 0
-	#  insert task0
-	# if indent == 1:
-	#	insert task 0 in task1
-	# if indent == 2:
-	#	insert task1 in task 2
-	# if indent ==3:
-	#	insert task2 in task 3
-	#if indent == 2:
-	#	
-	
-	
-	
+	prev = curr
 
 
-	
-#calculate difference between two dates
-#def date_diff(date1, date2):
-#	diff = date2 - date1
-#	return diff.days
+#timeline.TasksRoot.Children[0].Children[idx] #parent
+#parent.Children[0] #child
+#child.Children[childid] #child_son =
+#timeline.TasksRoot.Children[0].Children[idx].Children[0].Children[childid]
 
-#def date_add(date, days):
+def create_task():
+
+
+def recurse_parse(indent, parent, child = None):
+
+	pass
+
+
