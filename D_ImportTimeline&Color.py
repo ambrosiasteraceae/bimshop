@@ -8,13 +8,16 @@ from Autodesk.Navisworks.Api.Timeliner import TimelinerTask, TimelinerSelection
 from datetime import datetime
 
 
+timeline = doc.Timeliner
+timeline.TasksClear()
+
 ffp = os.path.join(os.getcwd(), 'FinalSchedule.csv')
 DATEFIELDS = ['Planned Start', 'Planned End', 'Actual Start', 'Actual End']
 DATEATTRS= ['PlannedStartDate', 'PlannedEndDate', 'ActualStartDate', 'ActualEndDate']
 def read_tasks(ffp):
     tasks = []
     from_format = "%d/%m/%Y"
-
+    from_format_hours = "%d/%m/%Y/%H"
     with open(ffp) as csvfile:
         reader = csv.DictReader(csvfile, delimiter=',')
         for row in reader:
@@ -26,7 +29,10 @@ def read_tasks(ffp):
                 try:
                     row[field] = datetime.strptime(row[field], from_format)
                 except:
-                    continue
+                    try:
+                        row[field] = datetime.strptime(row[field], from_format_hours)
+                    except:
+                        continue
 
             # if row['Planned Start']:
             #     row['Planned Start'] = datetime.strptime(row['Planned Start'], from_format)
@@ -41,7 +47,7 @@ def read_tasks(ffp):
 
             tasks.append(row)
 
-            print(row['Planned Start'])
+            #print(row['Planned Start'])
             #print(row['ActivityId'])
 
 
@@ -52,7 +58,7 @@ def get_last_task(root):
     Parses with recursion to the last item in the root tree
     """
     child = list(root.Children)[-1]
-    print('Child is', child.DisplayName)
+    #print('Child is', child.DisplayName)
     if child.Children:
         return get_last_task(child)
     return child
@@ -123,10 +129,9 @@ def parse_csv(tasks):
         parent, prev = filter_indent_lvl(parent, task, curr, prev)
         create_timeline(parent, task)
 
-timeline = doc.Timeliner
 counter = itertools.count()
 tasks = read_tasks(ffp)
-timeline.TasksClear()
+
 
 parse_csv(tasks)
 
@@ -135,5 +140,49 @@ parse_csv(tasks)
 
 
 
+def map_mitems_func():
+    map_modelitems = {}
+    mitems = doc.Models[0].RootItem.Children
+    for modelItem in mitems:
+        for child in modelItem.Children:
+            map_modelitems[child.InstanceGuid.ToString()] = child
+    return map_modelitems
 
+
+def recursive_parse(path):
+    for t in path.Children:
+        if t.Children:
+            recursive_parse(t)
+        else:
+            check_task(t)
+
+
+def check_task(task):
+    # get task state
+    #print(task.User2)
+    if task.User2:
+        if task.ActualEndDate:
+            seen.Add(map_modelitems[task.User2])
+        elif task.ActualStartDate:
+            inwork.Add(map_modelitems[task.User2])
+        else:
+            hidden.Add(map_modelitems[task.User2])
+    return
+
+
+seen = ModelItemCollection()
+hidden = ModelItemCollection()
+inwork = ModelItemCollection()
+map_modelitems = map_mitems_func()
+print('so far so good')
+
+recursive_parse(timeline.TasksRoot)
+
+doc.Models.SetHidden(hidden, False)
+doc.Models.OverridePermanentColor(seen, Color(0.2549, 0.4118, 0.8824))
+doc.Models.OverridePermanentColor(hidden, Color(0.8275, 0.8275, 0.8275))
+doc.Models.OverridePermanentTransparency(hidden, 0.5)
+doc.Models.OverridePermanentTransparency(seen, 0.5)
+doc.Models.OverridePermanentColor(inwork, Color(0.7059, 0.8627, 0.6667))
+doc.Models.OverridePermanentTransparency(inwork, 0.1)
 

@@ -6,10 +6,18 @@ from Autodesk.Navisworks.Api.Timeliner import TimelinerTask, TimelinerSelection
 chainages = {
     '12.00 P3 - BEACH RECLAMATION - FILL':
         {
-            1: 'FILL CH:+000 to +300', 2: 'FILL CH:+300 to +500', 3: 'FILL CH:+500 to +700', 4: 'FILL CH:+900 to +1100', 5: 'FILL CH:+700 to +900', 6: 'FILL CH:+1100 to +1300', 7: 'FILL CH:+1300 to +1500', 8: 'FILL CH:+1500 to +1700', 9: 'FILL CH:+1700 to +1900', 10: 'FILL CH:+1900 to +2100', 11: 'FILL CH:+2100 to +2300', 12: 'FILL CH:+2300 to +2400'
+            1: 'FILL CH:+000 to +300', 2: 'FILL CH:+300 to +500', 3: 'FILL CH:+500 to +700',
+			4:'FILL CH:+700 to +900', 5: 'FILL CH:+900 to +1100' , 6: 'FILL CH:+1100 to +1300',
+			7: 'FILL CH:+1300 to +1500', 8: 'FILL CH:+1500 to +1700', 9: 'FILL CH:+1700 to +1900',
+			10: 'FILL CH:+1900 to +2100', 11: 'FILL CH:+2100 to +2300', 12: 'FILL CH:+2300 to +2400'
         },
     'BEACH SAND': {
-        1: 'SAND CH:+000 to +300', 2: 'SAND CH:+300 to +500', 3: 'SAND CH:+500 to +700', 4: 'SAND CH:+900 to +1100', 5: 'SAND CH:+700 to +900', 6: 'SAND CH:+1100 to +1300', 7: 'SAND CH:+1300 to +1500', 8: 'SAND CH:+1500 to +1700', 9: 'SAND CH:+1700 to +1900', 10: 'SAND CH:+1900 to +2100', 11: 'SAND CH:+2100 to +2300', 12: 'SAND CH:+2300 to +2400',},
+        1: 'SAND CH:+000 to +300', 2: 'SAND CH:+300 to +500', 3: 'SAND CH:+500 to +700',
+		4: 'SAND CH:+700 to +900', 5: 'SAND CH:+900 to +1100', 6: 'SAND CH:+1100 to +1300',
+		7: 'SAND CH:+1300 to +1500',
+		8: 'SAND CH:+1500 to +1700',
+		9: 'SAND CH:+1700 to +1900',
+		10: 'SAND CH:+1900 to +2100', 11: 'SAND CH:+2100 to +2300', 12: 'SAND CH:+2300 to +2400',},
 
     '11.20 P3 - NORTH GROYNE AR': {1: 'AR CH: +000 to +020', 2: 'AR CH: +020 to +040',
                                    3: 'AR CH: +040 to +060', 4: 'AR CH: +060 to +080', 5: 'AR CH: +080 to +100',
@@ -90,7 +98,7 @@ def create_task(s):
 	print(s.DisplayName)
 	task.User2 = references[s.DisplayName] #instance guid
 	task.SimulationTaskTypeName = 'Construct' 
-	task.User1 = 'hidden'
+	task.User1 = 'shown'
 	return task
 
 
@@ -108,7 +116,7 @@ def process_task(t):
 	if t.DisplayName in mapping.keys():
 		val = mapping[t.DisplayName]
 		#
-		print(val)
+		#print(val)
 		for s in sets:
 			if isinstance(val, list):
 				for v in val:
@@ -130,3 +138,4 @@ def recursive_parse(path):
 
 
 recursive_parse(timeline.TasksRoot)
+print('Finish')

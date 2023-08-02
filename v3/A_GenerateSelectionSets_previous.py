@@ -1,59 +1,6 @@
 import os
 import json
 
-import math
-
-
-class Point:
-    def __init__(self, x, y, index=None, name=None):
-        self.x = x
-        self.y = y
-        self.index = index
-        self.newindex = None
-        self.name = name
-
-    def distance(self, other):
-        return math.sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
-
-
-
-class PointCluster:
-    def __init__(self, points_list):
-        self.points_list = points_list
-
-    def __getitem__(self, s):
-        return self.points_list[s]
-
-    @property
-    def x(self):
-        return [point.x for point in self.points_list]
-
-    @property
-    def y(self):
-        return [point.y for point in self.points_list]
-
-    @property
-    def index(self):
-        return [point.index for point in self.points_list]
-
-    def distance(self, other):
-        return [point.distance(other) for point in self.points_list]
-
-    def sort_by_distance(self, other):
-        self.points_list = sorted(self.points_list, key=lambda point: point.distance(other), reverse=True)
-        for i, point in enumerate(self.points_list):
-            point.newindex = i +1
-            self.newindex = [point.newindex for point in self.points_list]
-        return self.points_list
-
-    def to_dict(self):
-        """
-        Returns a dict that has:
-        {oldindex: newindex}
-        by old index, it is the first order index (order of appearence)
-        by new index, it is the ordered index by distance to the reference point
-        """
-        return {point.index: point.newindex for point in self.points_list}
 
 def save_references(_d):
     with open(os.path.join(os.getcwd(), 'references.json'), 'w') as f:
@@ -95,8 +42,11 @@ ordered_set = {
     '00 BEAMS PC1': {1: '31', 2: '30', 3: '29', 4: '28', 5: '27', 6: '26', 7: '25', 8: '24', 9: '1', 10: '2', 11: '3', 12: '4',
             13: '5', 14: '6', 15: '7', 16: '23', 17: '22', 18: '21', 19: '20', 20: '19', 21: '18', 22: '17', 23: '16',
             24: '15', 25: '14', 26: '13', 27: '12', 28: '11', 29: '10', 30: '9', 31: '8'},
-    '00 BEAMS PC2': {1: '2', 2: '1'}}
-
+    '00 BEAMS PC2': {1: '2', 2: '1'},
+    '00 PILES': {1: '99', 2: '34', 3: '33', 4: '98', 5: '35', 6: '32', 7: '97', 8: '36', 9: '31', 10: '96', 11: '37', 12: '30', 13: '95', 14: '38', 15: '29', 16: '94', 17: '39', 18: '28', 19: '93', 20: '40', 21: '27', 22: '92', 23: '41', 24: '26', 25: '91', 26: '42', 27: '25', 28: '8', 29: '59', 30: '74', 31: '1', 32: '66', 33: '67', 34: '2', 35: '65', 36: '68', 37: '3', 38: '64', 39: '69', 40: '4', 41: '63', 42: '70', 43: '5', 44: '62', 45: '71', 46: '6', 47: '61', 48: '72', 49: '7', 50: '60', 51: '73', 52: '90', 53: '43', 54: '24', 55: '89', 56: '44', 57: '23', 58: '88', 59: '45', 60: '22', 61: '87', 62: '46', 63: '21', 64: '86', 65: '47', 66: '20', 67: '85', 68: '48', 69: '19', 70: '84', 71: '49', 72: '18', 73: '83', 74: '50', 75: '17', 76: '82', 77: '51', 78: '16', 79: '81', 80: '52', 81: '15', 82: '80', 83: '53', 84: '14', 85: '79', 86: '54', 87: '13', 88: '78', 89: '55', 90: '12', 91: '77', 92: '56', 93: '11', 94: '76', 95: '57', 96: '10', 97: '75', 98: '58', 99: '9'},
+'00 METAL FORMWORK' : {1: '99', 2: '34', 3: '33', 4: '98', 5: '35', 6: '32', 7: '97', 8: '36', 9: '31', 10: '96', 11: '37', 12: '30', 13: '95', 14: '38', 15: '29', 16: '94', 17: '39', 18: '28', 19: '93', 20: '40', 21: '27', 22: '92', 23: '41', 24: '26', 25: '91', 26: '42', 27: '25', 28: '8', 29: '59', 30: '74', 31: '1', 32: '66', 33: '67', 34: '2', 35: '65', 36: '68', 37: '3', 38: '64', 39: '69', 40: '4', 41: '63', 42: '70', 43: '5', 44: '62', 45: '71', 46: '6', 47: '61', 48: '72', 49: '7', 50: '60', 51: '73', 52: '90', 53: '43', 54: '24', 55: '89', 56: '44', 57: '23', 58: '88', 59: '45', 60: '22', 61: '87', 62: '46', 63: '21', 64: '86', 65: '47', 66: '20', 67: '85', 68: '48', 69: '19', 70: '84', 71: '49', 72: '18', 73: '83', 74: '50', 75: '17', 76: '82', 77: '51', 78: '16', 79: '81', 80: '52', 81: '15', 82: '80', 83: '53', 84: '14', 85: '79', 86: '54', 87: '13', 88: '78', 89: '55', 90: '12', 91: '77', 92: '56', 93: '11', 94: '76', 95: '57', 96: '10', 97: '75', 98: '58', 99: '9'},
+'00 IN SITU CONCRETE - PILES' : {1: '99', 2: '34', 3: '33', 4: '98', 5: '35', 6: '32', 7: '97', 8: '36', 9: '31', 10: '96', 11: '37', 12: '30', 13: '95', 14: '38', 15: '29', 16: '94', 17: '39', 18: '28', 19: '93', 20: '40', 21: '27', 22: '92', 23: '41', 24: '26', 25: '91', 26: '42', 27: '25', 28: '8', 29: '59', 30: '74', 31: '1', 32: '66', 33: '67', 34: '2', 35: '65', 36: '68', 37: '3', 38: '64', 39: '69', 40: '4', 41: '63', 42: '70', 43: '5', 44: '62', 45: '71', 46: '6', 47: '61', 48: '72', 49: '7', 50: '60', 51: '73', 52: '90', 53: '43', 54: '24', 55: '89', 56: '44', 57: '23', 58: '88', 59: '45', 60: '22', 61: '87', 62: '46', 63: '21', 64: '86', 65: '47', 66: '20', 67: '85', 68: '48', 69: '19', 70: '84', 71: '49', 72: '18', 73: '83', 74: '50', 75: '17', 76: '82', 77: '51', 78: '16', 79: '81', 80: '52', 81: '15', 82: '80', 83: '53', 84: '14', 85: '79', 86: '54', 87: '13', 88: '78', 89: '55', 90: '12', 91: '77', 92: '56', 93: '11', 94: '76', 95: '57', 96: '10', 97: '75', 98: '58', 99: '9'},
+}
 # Map the name name of the model item ot the desired selection set
 name_map = {'00 SLABS - SL1': 'SL1', '00 SLABS - SL2': 'SL2', '00 SLABS - SL3': 'SL3', '00 SLABS - SL4A': 'SL4A',
             '00 SLABS - SL4B': 'SL4B', '00 SLABS - SL5A': 'SL5A', '00 SLABS - SL5B': 'SL5B', '00 SLABS - SL6A': 'SL6A',
@@ -111,35 +61,20 @@ chainages = {
     'BEACH SAND': {1: 'CH:+2300 to +2400', 2: 'CH:+2100 to +2300', 3: 'CH:+1900 to +2100', 4: 'CH:+1700 to +1900',
                    5: 'CH:+1500 to +1700', 6: 'CH:+1300 to +1500', 7: 'CH:+1100 to +1300', 9: 'CH:+700 to +900',
                    8: 'CH:+900 to +1100', 10: 'CH:+500 to +700', 11: 'CH:+300 to +500', 12: 'CH:+000 to +300', },
-    '11.20 P3 - NORTH GROYNE AR': {
-                                   1: 'CH: +000 to +020',
-                                   2: 'CH: +020 to +040',
-                                   3: 'CH: +040 to +060',
-                                   4: 'CH: +060 to +080',
-                                   5: 'CH: +080 to +100',
-                                   6: 'CH: +100 to +120',
-                                   8: 'CH: +120 to +140',
-                                   7: 'CH: +140 to +150',
-                                   },
-    '11.10 P3 - NORTH GROYNE QR': {
-                                   2: 'CH: +000 to +020',
-                                   1: 'CH: +020 to +040',
-                                   3: 'CH: +040 to +060',
-                                   6: 'CH: +060 to +080',
-                                   5: 'CH: +080 to +100',
-                                   4: 'CH: +100 to +120',
-                                   8: 'CH: +120 to +140',
-                                   7: 'CH: +140 to +150',
-                                   },
+    '11.20 P3 - NORTH GROYNE AR': {1: 'CH: +140 to +150', 2: 'CH: +000 to +020', 3: 'CH: +020 to +040',
+                                   4: 'CH: +040 to +060', 5: 'CH: +060 to +080', 6: 'CH: +080 to +100',
+                                   7: 'CH: +100 to +120', 8: 'CH: +120 to +140'},
+    '11.10 P3 - NORTH GROYNE QR': {5: 'CH: +140 to +150', 2: 'CH: +000 to +020', 1: 'CH: +020 to +040',
+                                   3: 'CH: +040 to +060', 4: 'CH: +060 to +080', 6: 'CH: +080 to +100',
+                                   7: 'CH: +100 to +120', 8: 'CH: +120 to +140'},
     '00 IN SITU CONCRETE - SLAB': {1 : '33%-67%', 2 : '67%-100%', 3 : '0-33%'}
 }
 
 
 
-
 doc.SelectionSets.Clear()
 
-
+references = {}
 
 root = doc.Models[0].RootItem
 
@@ -149,55 +84,10 @@ for c in root.Children:
     # {key: value} = {Root.DisplayName: [ModelItems of Root Children]}
     container[c.DisplayName] = [modelItem for modelItem in c.Children]
 
-def parse_point(point):
-    return point.X, point.Y
-
-
-def process_pile_points():
-    """
-    The piles have a different ordering from the client.
-    This function will return the correct order.
-    """
-    pile_row1 = list(range(1, 34))
-    pile_row2 = list(range(34, 67))[::-1]
-    pile_row3 = list(range(67, 100))
-    pile_order = []
-    for r1, r2, r3 in zip(pile_row1, pile_row2, pile_row3):
-        for r in [r1, r2, r3]:
-            pile_order.append(r)
-    return pile_order
-
-
-pile_order = process_pile_points() #By ATM
-indexed = dict(zip(range(1, len(pile_order)+1), pile_order))
-
-
-def process_cluster(modelitems, ref_point = Point(0,0)):
-    """
-    Process model items from the container dict
-    {key: value} = {Root.DisplayName: [ModelItems of Root Children]}
-    and returns the Cluster of Points sorted by distance from a reference point.
-    Defaults (0,0) as reference point.
-    """
-    points = []
-    for i, mitem in enumerate(modelitems):
-        point3d = mitem.Geometry.BoundingBox.Center
-        x, y = parse_point(point3d)
-        points.append(Point(x, y, i+1))
-    cluster = PointCluster(points)
-    cluster.sort_by_distance(ref_point)
-    return cluster.to_dict()
-
-
-
-
-
-piles = ['00 PILES', '00 METAL FORMWORK', '00 IN SITU CONCRETE - PILES']
 references = {}  # Stores the key:val pairs where key = Selection.Id and val is Model.Id
+x = 0
+
 for item in container.keys():
-    if item in piles:
-        print(item)
-        sorted_mitems = process_cluster(container[item])
     for i, child in enumerate(container[item]):
         col = ModelItemCollection()
         col.Add(child)
@@ -213,14 +103,6 @@ for item in container.keys():
             newsel.DisplayName = name_ref
             references[name_ref] = child.InstanceGuid.ToString()
 
-        elif item in piles:
-
-            name_ref = "(" + str(sorted_mitems[i + 1]) + ")" + name_map[item] + '-' +  str(indexed[sorted_mitems[i + 1]])
-            newsel.DisplayName = name_ref
-            references[name_ref] = child.InstanceGuid.ToString()
-			#newsel.DisplayName = name_ref
-            #references[name_ref] = child.InstanceGuid.ToString()
-			#print(name_ref)
         else:
             name_convention = item + '-' + str(i + 1)
             newsel.DisplayName = name_convention

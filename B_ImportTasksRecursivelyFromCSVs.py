@@ -33,7 +33,7 @@ def get_last_task(root):
     Parses with recursion to the last item in the root tree
     """
     child = list(root.Children)[-1]
-    print('Child is', child.DisplayName)
+    #print('Child is', child.DisplayName)
     if child.Children:
         return get_last_task(child)
     return child
@@ -94,8 +94,6 @@ tasks = read_tasks(ffp)
 timeline.TasksClear()
 parse_csv(tasks)
 
-for t in timeline.TasksRoot.Children:
-	print(t.DisplayName)
 
 
 
